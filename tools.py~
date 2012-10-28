@@ -1,0 +1,10 @@
+#just some useful tools
+
+"""
+given a dictionary of keys
+and probabilities will return
+a key at random based on it's probability
+"""
+def proportional_random_select(prob_dict):
+    
+
