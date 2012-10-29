@@ -1,4 +1,4 @@
-from  markov_process import MarkovProcess
+from  hidden_markov_model import HiddenMarkovModel
 #crazy coke machine example
 
 Pi = {"cola_pref":1}
@@ -12,4 +12,4 @@ emission_probs["cola_pref"] = {"cola": 0.6,"ice_t": 0.1,"lem":0.3}
 emission_probs["ice_t_pref"] = {"cola":0.1,"ice_t":0.7,"lem":0.2}
 
 
-example_mp = MarkovProcess(Pi,A,emission_probs)
+example_hmm = HiddenMarkovModel(Pi,A,emission_probs)
