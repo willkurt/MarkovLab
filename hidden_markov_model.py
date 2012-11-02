@@ -12,6 +12,8 @@ from tools import prs
 class HiddenMarkovModel:
     
     """
+    NOTE: refactor these so that they are sensible
+          rather than technical
     Using Variables from 'Foundations of Statistical NLP' pp. 324
     S = set of states 
     K = output alphabet
@@ -24,6 +26,7 @@ class HiddenMarkovModel:
         self.A = A # dict of dicts 
         # still need to do 'B' but might actaully be
         self.B = B
+        self._compute_trellis(100)
 
     """ generates a sequence of characters based on the input """
     def run(self,n,debug=False):
@@ -58,3 +61,40 @@ class HiddenMarkovModel:
     def predict_states(self,outcomes):
         pass
     
+
+    # dynamic programming solution to 
+    # computing the trellis, pre computes to 
+    # n states
+    # NOTE: there must be some way to 
+    # do dynamic programming up until convergence?
+    # or maybe convergence isn't guaranetted?
+    def _compute_trellis(self,n):
+        #should be all the states
+        self.trellis = {}
+        # initialize with starting probs
+        for s in self.A.keys():
+            if self.Pi.has_key(s):
+                self.trellis[s] = [self.Pi[s]]
+            else:
+                self.trellis[s] = [0]
+        #now update all rows up to n
+        for i in xrange(1,n):
+            for x in self.A.keys():
+                total_of_probs = 0
+                for s in self.A.keys():
+                    #probably going to need to optimize
+                    #for overflow here
+                    #sum of provious probably * transition prob
+                    prob_of_state = self.trellis[s][i-1]
+                    prob_of_transition = self.A[s][x]
+                    total_of_probs += prob_of_state*prob_of_transition
+                self.trellis[x].append(total_of_probs)
+
+    #putting this in it's own method so that 
+    #later I can add a means to allocate more data in the trellis if necessary
+    def alpha(self,state,time):
+        #for now keeping it simple
+        return self.trellis[state][time]
+
+
+ 
