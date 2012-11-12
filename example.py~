@@ -1,23 +1,15 @@
-from  markov_lab import MarkovProcess
+from  hidden_markov_model import HiddenMarkovModel
 #crazy coke machine example
 
-#states
-nstates = 2
-
-#coke prefering state 0
-#iced tea prefering state 1
-
-K = ["cola","ice_t","lem"]
-
-Pi = {0:1}
+Pi = {"cola_pref":1}
 
 A = {}
-A[0] = {0:0.7,1:0.3}
-A[1] = {0:0.5,1:0.5}
+A["cola_pref"] = {"cola_pref":0.7,"ice_t_pref":0.3}
+A["ice_t_pref"] = {"cola_pref":0.5,"ice_t_pref":0.5}
 
 emission_probs = {}
-emission_probs[0] = {"cola": 0.6,"ice_t": 0.1,"lem":0.3}
-emission_probs[1] = {"cola":0.1,"ice_t":0.7,"lem":0.2}
+emission_probs["cola_pref"] = {"cola": 0.6,"ice_t": 0.1,"lem":0.3}
+emission_probs["ice_t_pref"] = {"cola":0.1,"ice_t":0.7,"lem":0.2}
 
 
-example_mp = MarkovProcess(nsstates,K,Pi,A,emission_probs)
+example_hmm = HiddenMarkovModel(Pi,A,emission_probs)
