@@ -13,7 +13,7 @@ class HiddenMarkovModel:
     
     """
     NOTE: refactor these so that they are sensible
-          rather than technical
+          rather than technical (or maybe not...)
     Using Variables from 'Foundations of Statistical NLP' pp. 324
     S = set of states 
     K = output alphabet
@@ -120,8 +120,43 @@ class HiddenMarkovModel:
     predict a set of states that
     is most likely to have generated this
     """
-    def predict_states(self,outputs):
-        pass
+ 
 
+    # used to select maximum of all individual states
+    # also i get mathematically what this is doing
+    # but it seems more sensible from an implementation
+    # standpoint to just select the bigest alpha(t)*beta(t)
+    def gamma(self,outputs,t,state):
+        # as mentioned earlier this gives you the exact
+        # probability at time t
+        top = self.alpha(outputs,t,state)*self.beta(outputs,t,state)
+        bottom = 0
+        for j in self.A.keys():
+            bottom += self.alpha(outputs,t,j)*self.beta(outputs,t,j)
+        return top/bottom
+
+    def most_likely_state(self, outputs,t):
+        state = ""
+        max_gamma = 0
+        for s in self.A.keys():
+            s_gamma = self.gamma(outputs,t,s)
+            if(s_gamma > max_gamma):
+                max_gamma = s_gamma
+                state = s
+        return state
+
+
+    # chooses maximum individual state
+    def predict_states_individual(self,outputs):
+        states = []
+        # plus 1 is the way it is in the Manning et. al.
+        # note to self, just double check how to do inclusive range
+        for t in xrange(1,len(outputs)+2):
+            states.append(self.most_likely_state(outputs,t))
+        return states
+        
+    # chooses maximum combined sequence
+ #   def predict_states_sequence(self,outputs):
+#        pass
 
  
