@@ -154,9 +154,69 @@ class HiddenMarkovModel:
         for t in xrange(1,len(outputs)+2):
             states.append(self.most_likely_state(outputs,t))
         return states
+    
+    #assumes a Psi is initlized
+    # should add a check to see if prob and state are already computed
+    #  (maybe) make private as only the viterbi algorithm should be called directly
+    # since it handles the resetting the hash for the objs
+    def delta(self,outputs,t,state):
+        if  self.deltaProbs[state].has_key(t):
+            return self.deltaProbs[state][t]
+        elif t == 1:
+            if self.Pi.has_key(state):
+                return self.Pi[state]
+            else:
+                return 0
+        else:
+            #can rewrite this in a more functional way later
+            max_prob = 0
+            max_state = ''
+            for k in self.A.keys():
+                val = self.delta(outputs,t-1,k)*self.A[k][state]*self.B[k][outputs[t-2]]
+                if val > max_prob:
+                    max_prob = val
+                    max_state = k
+            #store the backtrace
+                self.Psi[state][t] = max_state
+                self.deltaProbs[state][t] = max_prob
+            return max_prob
+
+
+    #calculate deltas and psi
+    #note: i could pull the self.Psi into a ht that's passed around
+    def viterbi(self,obs):
+        #initialize Psi
+        self.Psi = {}
+        self.deltaProbs = {}
+        for k in self.A.keys():
+            self.Psi[k] = {}
+            self.deltaProbs[k] = {}
+        #now populate psi
+        t = len(obs)+1
+        for k in self.A.keys():
+            self.delta(obs,t,k)
+        return self.Psi
+            
         
     # chooses maximum combined sequence
- #   def predict_states_sequence(self,outputs):
-#        pass
+    def predict_states_sequence(self,obs):
+        # will store all the necessary computations
+        self.viterbi(obs)
+        t = len(obs)+1
+        predicted_states = []
+        last_state = ""
+        max_prob = 0 
+        for k in self.A.keys():
+            p = self.delta(obs,t,k)
+            if p > max_prob:
+                max_prob = p
+                last_state = k
+        predicted_states.append(last_state)
+        while(t > 1):
+            last_state = self.Psi[last_state][t]
+            predicted_states.append(last_state)
+            t -= 1
+        predicted_states.reverse()
+        return predicted_states
 
  
