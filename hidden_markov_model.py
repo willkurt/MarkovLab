@@ -41,8 +41,6 @@ class HiddenMarkovModel:
             current_state = prs(self.A[current_state])
         return chain
         
-            
-            
     
     """
     Given a set O of outcomes 

@@ -1,4 +1,5 @@
 from  hidden_markov_model import HiddenMarkovModel
+from hmm_trainer import HMMTrainer
 #crazy coke machine example
 
 Pi = {"cola_pref":1}
