@@ -22,6 +22,18 @@ def prs(prob_dict):
     #in case theres an issue return last
     return keys[-1]
 
+
+# generates a random probability distribution summing to 1
+def gen_dist(n):
+    #generate a list of random number
+    pieces =  map(lambda x: random(),xrange(0,n))
+    #find the sum
+    s = sum(pieces)
+    #get the probabilities by normalizing over the sum
+    probs = map(lambda x: x/s,pieces)
+    return probs
+
+
 """
 pull this out into more formal tests later
 """

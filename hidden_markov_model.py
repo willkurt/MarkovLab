@@ -219,4 +219,10 @@ class HiddenMarkovModel:
         predicted_states.reverse()
         return predicted_states
 
- 
+    
+    #generates a sample corpora used to test training
+    #debating making s_len generate random length in range
+    def generate_corpora(self,s_len,size):
+        corpora = map(lambda x: self.run(s_len),xrange(1,size))
+        return corpora
+

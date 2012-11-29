@@ -14,3 +14,10 @@ emission_probs["ice_t_pref"] = {"cola":0.1,"ice_t":0.7,"lem":0.2}
 
 example_hmm = HiddenMarkovModel(Pi,A,emission_probs)
 obs = ["lem","ice_t","cola"]
+
+
+hmm_trainer = HMMTrainer(4)
+
+r_hmm = hmm_trainer.random_hmm(["cola","ice_t","lem"])
+
+
