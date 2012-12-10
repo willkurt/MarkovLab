@@ -37,9 +37,9 @@ class HMMTrainer:
     # examples
     # does only one pass over the corpus
     # rather than traning to convergence
-    def train(self,model,corpus):
+    def train_once(self,model,corpus):
         states = model.A.keys()
-        symbols = model.B.values()
+        symbols = model.B.values()[0].keys()
         for obs in corpus:
             #re-estimate the initial probs
             Pi = {}
@@ -48,10 +48,16 @@ class HMMTrainer:
             for state in states:
                 A[state] = {}
                 B[state] = {}
+                for symbol in symbols:
+                    B[state][symbol] = 0
+            symbol_counts = {}
             for state in states:
                 #update starting prob
                 Pi[state] = model.gamma(obs,1,state)
                 #update transisition probs
+                for s in symbols:
+                    symbol_counts[s] = 0.0
+                total_prob = 0.0    
                 for j in states:
                     #get to use this twice
                     #as the num in the transition prob
@@ -61,9 +67,12 @@ class HMMTrainer:
                     for t in xrange(1,len(obs)+1):
                         expected_i_to_j += model.rho(obs,t,state,j)
                         expected_transitions += model.gamma(obs,t,state)
+                        symbol_counts[obs[t-1]] += model.rho(obs,t,state,j)
                     A[state][j] = expected_i_to_j/expected_transitions
-                    #NOTE STILL NEED TO TRAIN SYMBOL EMISSONS
-            model = HiddenMarkovModel(Pi,A,model.B) #model B is just a place holder
+                    total_prob += expected_i_to_j
+                for s in symbols:
+                    B[state][s] = symbol_counts[s]/total_prob
+            model = HiddenMarkovModel(Pi,A,B) 
         return model
                     
                 
