@@ -63,7 +63,8 @@ class HMMTrainer:
                         expected_transitions += model.gamma(obs,t,state)
                     A[state][j] = expected_i_to_j/expected_transitions
                     #NOTE STILL NEED TO TRAIN SYMBOL EMISSONS
-        return HiddenMarkovModel(Pi,A,model.B) #model B is just a place holder
+            model = HiddenMarkovModel(Pi,A,model.B) #model B is just a place holder
+        return model
                     
                 
             
