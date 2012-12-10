@@ -35,5 +35,37 @@ class HMMTrainer:
     # uses EM to train an optimal HMM
     # given a corpus of training 
     # examples
-    def train(self,corpus):
-        pass
+    # does only one pass over the corpus
+    # rather than traning to convergence
+    def train(self,model,corpus):
+        states = model.A.keys()
+        symbols = model.B.values()
+        for obs in corpus:
+            #re-estimate the initial probs
+            Pi = {}
+            A = {}
+            B = {}
+            for state in states:
+                A[state] = {}
+                B[state] = {}
+            for state in states:
+                #update starting prob
+                Pi[state] = model.gamma(obs,1,state)
+                #update transisition probs
+                for j in states:
+                    #get to use this twice
+                    #as the num in the transition prob
+                    #and the dom in the emission prob
+                    expected_i_to_j = 0 
+                    expected_transitions = 0
+                    for t in xrange(1,len(obs)+1):
+                        expected_i_to_j += model.rho(obs,t,state,j)
+                        expected_transitions += model.gamma(obs,t,state)
+                    A[state][j] = expected_i_to_j/expected_transitions
+                    #NOTE STILL NEED TO TRAIN SYMBOL EMISSONS
+        return HiddenMarkovModel(Pi,A,model.B) #model B is just a place holder
+                    
+                
+            
+
+            

@@ -17,8 +17,9 @@ example_hmm = HiddenMarkovModel(Pi,A,emission_probs)
 obs = ["lem","ice_t","cola"]
 
 
-hmm_trainer = HMMTrainer(4)
+hmm_trainer = HMMTrainer(2)
 
 r_hmm = hmm_trainer.random_hmm(["cola","ice_t","lem"])
 
+training_hmm = HiddenMarkovModel(Pi,A,emission_probs)
 

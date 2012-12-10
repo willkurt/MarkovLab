@@ -30,16 +30,21 @@ class HiddenMarkovModel:
     """ generates a sequence of characters based on the input """
     def run(self,n,debug=False):
         chain = []
+        hidden = []
         current_state = prs(self.Pi)
         for i in xrange(0,n):
             if debug:
-                print(current_state)
+                hidden.append(current_state)
+                #print(current_state)
             #emit
             emitted = prs(self.B[current_state])
             chain.append(emitted)
             #move
             current_state = prs(self.A[current_state])
-        return chain
+        if debug:
+            return [chain,hidden]
+        else:
+            return chain
         
     
     """
@@ -63,7 +68,7 @@ class HiddenMarkovModel:
         t = len(outcomes)+1
         total = 0
         for s in self.A.keys():
-            total += self.Pi[s]*self.beta(outpus,1,s)
+            total += self.Pi[s]*self.beta(outputs,1,s)
         return total
 
     # the forward procedure which uses
@@ -133,6 +138,18 @@ class HiddenMarkovModel:
             bottom += self.alpha(outputs,t,j)*self.beta(outputs,t,j)
         return top/bottom
 
+    #the probability of transition
+    #used in training the model
+    def rho(self,outputs,t,state_i,state_j):
+        top = self.alpha(outputs,t,state=state_i)*self.A[state_i][state_j]*self.B[state_i][outputs[t-1]]*self.beta(outputs,t+1,state_j)
+        bottom = 0
+        for x in self.A.keys():
+            bottom += self.alpha(outputs,t,x)*self.beta(outputs,t,x)
+        return top/bottom
+
+
+
+
     def most_likely_state(self, outputs,t):
         state = ""
         max_gamma = 0
@@ -195,7 +212,7 @@ class HiddenMarkovModel:
             self.delta(obs,t,k)
         return self.Psi
             
-        
+    
     # chooses maximum combined sequence
     def predict_states_sequence(self,obs):
         # will store all the necessary computations
