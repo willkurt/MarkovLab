@@ -61,11 +61,11 @@ class HiddenMarkovModel:
         return total
 
     def likelihood_alpha(self, outputs):
-        t = len(outcomes)+1
+        t = len(outputs)+1
         return self.alpha(outputs,t)
 
     def likelihood_beta(self, outputs):
-        t = len(outcomes)+1
+        t = len(outputs)+1
         total = 0
         for s in self.A.keys():
             total += self.Pi[s]*self.beta(outputs,1,s)
@@ -146,6 +146,8 @@ class HiddenMarkovModel:
         for x in self.A.keys():
             bottom += self.alpha(outputs,t,x)*self.beta(outputs,t,x)
         return top/bottom
+
+
 
 
 
@@ -237,7 +239,7 @@ class HiddenMarkovModel:
     
     #generates a sample corpora used to test training
     #debating making s_len generate random length in range
-    def generate_corpora(self,s_len,size):
+    def generate_corpus(self,s_len,size):
         corpora = map(lambda x: self.run(s_len),xrange(1,size))
         return corpora
 

@@ -71,7 +71,11 @@ class HMMTrainer:
                     A[state][j] = expected_i_to_j/expected_transitions
                     total_prob += expected_i_to_j
                 for s in symbols:
-                    B[state][s] = symbol_counts[s]/total_prob
+                    if total_prob == 0:
+                        prob = 0
+                    else:
+                        prob =  symbol_counts[s]/total_prob
+                    B[state][s] = prob
             model = HiddenMarkovModel(Pi,A,B) 
         return model
                     
