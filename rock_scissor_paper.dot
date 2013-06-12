@@ -1,0 +1,42 @@
+digraph G {
+
+	subgraph cluster_1 {
+rankdir=LR;
+		style=filled;
+		color=lightgrey;
+		node [style=filled,color=white];
+		rock_loving -> rock_loving [ label = "0.6" ];
+		rock_loving -> paper_loving [ label = "0.3" ];
+		rock_loving -> scissor_loving [ label = "0.1" ];
+		paper_loving -> rock_loving [label="0.1"];
+		paper_loving -> paper_loving [ label = "0.6" ];
+		paper_loving -> scissor_loving [ label = "0.3" ];
+		scissor_loving -> rock_loving [ label = "0.3" ];
+		scissor_loving -> paper_loving  [ label = "0.1" ];
+		scissor_loving -> scissor_loving  [ label = "0.6" ];
+
+		label = "hidden states";
+	}
+
+	subgraph cluster_2 {
+		node [style=filled];
+
+	rock_loving -> rock  [ label = "0.6" ];
+	rock_loving -> paper  [ label = "0.2" ];
+	rock_loving -> scissor  [ label = "0.2" ];
+	paper_loving -> rock  [ label = "0.2" ];
+	paper_loving -> paper  [ label = "0.7" ];
+	paper_loving -> scissor  [ label = "0.1" ];
+	scissor_loving -> rock  [ label = "0.1" ];
+	scissor_loving -> paper  [ label = "0.1" ];
+	scissor_loving -> scissor  [ label = "0.8" ];
+		color=blue;
+	}
+	start -> rock_loving  [ label = "0.5" ];
+	start -> paper_loving  [ label = "0.25" ];
+	start -> scissor_loving  [ label = "0.25" ];
+
+	start [shape=doublecircle];
+
+
+}

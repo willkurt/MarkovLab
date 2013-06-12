@@ -1,7 +1,0 @@
-"""
-
-HMMTrainer
-
-Uses EM to train a hmm for a given set of training data
-
-"""
